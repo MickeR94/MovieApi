@@ -17,7 +17,16 @@ public class MoviesController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Movie>>> GetMovie()
     {
-        return await _context.Movies.ToListAsync();
+
+        return await _context.Movies.ToListAsync(); //<-- The original. Gives 200 OK but does not show any details, actors och reviews
+
+        /*var movies = await _context.Movies
+        .Include(m => m.MovieDetails)
+        .Include(m => m.Reviews)
+        .Include(m => m.Actors)
+        .ToListAsync();
+
+        return Ok(movies);*/
     }
 
     // GET: api/Movies/5
