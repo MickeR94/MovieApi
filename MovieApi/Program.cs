@@ -1,11 +1,12 @@
 
 using Microsoft.EntityFrameworkCore;
+using MovieApi.Extensions;
 
 namespace MovieApi
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,14 @@ namespace MovieApi
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             var app = builder.Build();
+
+            // From Metod 2: Separat Seed-metod, Föreläsning Entity Framework CORE-Seeding - NOTE: Removed await since the Seed-method is synchronous and void
+            using (var scope = app.Services.CreateScope())
+            {
+                var context =
+                    scope.ServiceProvider.GetRequiredService<MovieApiContext>();
+                SeedData.Seed(context);
+            }
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
